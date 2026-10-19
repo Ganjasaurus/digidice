@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080909">
+  <meta name="description" content="DIGIDICE by RETROFLESHED. Two sets of physical 3D dice, five original shapes, and a little chaos.">
+  <title>DIGIDICE — RETROFLESHED</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%237baa35' d='M0 0h32v32H0z'/%3E%3Cpath fill='%23080909' d='M6 6h6v6H6zm14 14h6v6h-6zM13 13h6v6h-6z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="vendor/three-r110.min.js"></script>
+  <script defer src="vendor/cannon-0.6.2.min.js"></script>
+  <script defer src="textures.js"></script>
+  <script defer src="core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<main id="fullScreenContainer" class="app">
+  <header class="masthead">
+    <a class="brand" href="./index.html" aria-label="RETROFLESHED DIGIDICE home"><span class="brand-mark" aria-hidden="true">▧</span> RETROFLESHED<span class="brand-period">.</span></a>
+    <div class="utilities" aria-label="Tray controls">
+      <button type="button" id="enableSound" class="utility" aria-pressed="false">MUSIC <span>OFF</span></button>
+      <button type="button" id="requestPermission" class="utility" aria-pressed="false">MOTION <span>OFF</span></button>
+      <button type="button" id="toggleFullscreen" class="utility" aria-pressed="false"><span aria-hidden="true">⛶</span> <span class="fullscreen-label">FULLSCREEN</span></button>
+    </div>
+  </header>
+  <section class="title-row" aria-labelledby="appTitle">
+    <div><p class="eyebrow">THE ORIGINAL DICE ROLLER</p><h1 id="appTitle">DIGIDICE<span aria-hidden="true">_</span></h1></div>
+    <span class="title-detail" aria-hidden="true">D2 / D4 / D6 / D8<br>LET THEM FALL.</span>
+  </section>
+  <div class="console">
+    <section class="tray-panel" aria-label="3D dice tray">
+      <div class="panel-bar"><span><span class="signal" aria-hidden="true"></span> THE TRAY</span><span id="trayStatus" role="status" aria-live="polite">LOADING</span></div>
+      <div id="diceRollerContainer" class="tray">
+        <span class="tray-corner corner-tl" aria-hidden="true"></span><span class="tray-corner corner-tr" aria-hidden="true"></span><span class="tray-corner corner-bl" aria-hidden="true"></span><span class="tray-corner corner-br" aria-hidden="true"></span>
+        <canvas id="diceCanvas" aria-label="Animated physical dice. Results appear below the tray."></canvas>
+        <p id="viewLabel" class="view-label">CHOOSE YOUR DICE. HIT ROLL.</p>
+      </div>
+      <div id="results" class="results" aria-label="Roll results" aria-live="polite" aria-atomic="true"><p class="ready-note">A LITTLE CHAOS. IN YOUR HANDS.</p></div>
+    </section>
+    <form id="ui" class="controls" novalidate>
+      <fieldset class="set-card" id="set1"><legend><span class="set-number">01</span> SET ONE</legend>
+        <label for="type1">DICE TYPE</label>
+        <select id="type1" name="type1"><option value="coin">D2 · Coin</option><option value="tetra">D4 · Tetrahedron</option><option value="tjtetra">D4 · TeeJayhedron</option><option value="dice" selected>D6 · Cube</option><option value="octahedron">D8 · Octahedron</option></select>
+        <div class="settings-row"><div class="colour-control"><label for="color1">COLOUR</label><div class="colour-input"><input type="color" id="color1" name="color1" value="#85b941" aria-label="Set one colour"><span id="colourLabel1" aria-hidden="true">#85B941</span></div></div>
+          <div class="amount-control"><label for="amount1">AMOUNT</label><div class="stepper"><button type="button" data-player="1" data-step="-1" aria-label="Decrease set one amount">−</button><input type="number" id="amount1" name="amount1" min="0" max="12" step="1" value="3" inputmode="numeric" aria-label="Set one amount" aria-describedby="amountHint"><button type="button" data-player="1" data-step="1" aria-label="Increase set one amount">+</button></div></div></div>
+      </fieldset>
+      <fieldset class="set-card" id="set2"><legend><span class="set-number">02</span> SET TWO</legend>
+        <label for="type2">DICE TYPE</label>
+        <select id="type2" name="type2"><option value="coin">D2 · Coin</option><option value="tetra">D4 · Tetrahedron</option><option value="tjtetra">D4 · TeeJayhedron</option><option value="dice" selected>D6 · Cube</option><option value="octahedron">D8 · Octahedron</option></select>
+        <div class="settings-row"><div class="colour-control"><label for="color2">COLOUR</label><div class="colour-input"><input type="color" id="color2" name="color2" value="#963ccd" aria-label="Set two colour"><span id="colourLabel2" aria-hidden="true">#963CCD</span></div></div>
+          <div class="amount-control"><label for="amount2">AMOUNT</label><div class="stepper"><button type="button" data-player="2" data-step="-1" aria-label="Decrease set two amount">−</button><input type="number" id="amount2" name="amount2" min="0" max="12" step="1" value="3" inputmode="numeric" aria-label="Set two amount" aria-describedby="amountHint"><button type="button" data-player="2" data-step="1" aria-label="Increase set two amount">+</button></div></div></div>
+      </fieldset>
+      <p id="amountHint" class="amount-hint">0–12 per set. Zero sits this one out.</p>
+      <button type="submit" id="rollButton" class="roll-button" disabled><span>ROLL</span><span aria-hidden="true">↗</span></button>
+      <p class="keyboard-hint"><kbd>SPACE</kbd> TO ROLL <span>↳</span> OR TAP THE BUTTON</p>
+    </form>
+  </div>
+  <p id="errorLog" class="notice" role="status" aria-live="polite"></p>
+  <footer class="footer"><span>RETROFLESHED / DIGIDICE</span><span>ROLL. REPEAT.</span></footer>
+  <audio id="music" src="assets/abb42-new-composition-131.mp3" loop preload="none"></audio>
+  <audio id="rollSound" src="assets/60fed-dice-142528.mp3" preload="auto"></audio>
+  <audio id="coinSound" src="assets/36e44-coinsound.mp3" preload="auto"></audio>
+  <noscript><p class="notice">Enable JavaScript to roll the dice.</p></noscript>
+</main>
+</body>
+</html>

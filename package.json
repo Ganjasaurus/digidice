@@ -1,0 +1,10 @@
+﻿{
+  "name": "digidice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Restored original DIGIDICE 3D physical dice roller with Three.js and Cannon.js",
+  "scripts": {
+    "start": "node dist/serve.cjs",
+    "build": "node --check dist/app.js && node --check dist/core.js && node --check dist/textures.js"
+  }
+}
