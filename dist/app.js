@@ -24,7 +24,7 @@
   function resize() {
     const width=tray.clientWidth, height=tray.clientHeight;
     if (!renderer || !width || !height) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,/Xbox/i.test(navigator.userAgent)?1:2));
     renderer.setSize(width,height,false);
     const aspect=width/height, size=12.2;
     camera.left=-size*Math.max(1,aspect); camera.right=-camera.left;
@@ -257,7 +257,7 @@
       if(!core || !window.THREE || !window.CANNON)throw new Error('A local app file is missing. Keep index.html, scripts, assets and vendor folders together.');
       scene=new THREE.Scene();camera=new THREE.OrthographicCamera(-12,12,12,-12,1,1000);
       camera.position.set(0,465,100);camera.lookAt(0,465,0);
-      renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setClearColor(0x000000,0);
+      try{try{renderer=new THREE.WebGLRenderer({canvas,antialias:!/Xbox/i.test(navigator.userAgent),alpha:true});}catch{renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});}renderer.setClearColor(0x000000,0);}catch{const ctx2d=canvas.getContext('2d');renderer={setClearColor(){},setPixelRatio(){},setSize(w,h){canvas.width=w;canvas.height=h;},render(){if(!ctx2d)return;ctx2d.clearRect(0,0,canvas.width,canvas.height);records.forEach(r=>{const x=(r.body.position.x/24+.5)*canvas.width,y=(r.body.position.z/24+.5)*canvas.height;ctx2d.fillStyle=r.color||'#7de2d1';ctx2d.fillRect(x-16,y-16,32,32);});}};}
       world=core.createWorld();textures=await loadTextures();
       $('rollSound').volume=.5;
       Object.keys(core.TYPES).forEach(type=>{geometries[type]=core.geometry(type);if(type!=='coin')edges[type]=new THREE.EdgesGeometry(geometries[type]);});
