@@ -12,3 +12,31 @@ button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-col
 @media(max-width:350px){h1{font-size:51px}.title-detail{display:none}.utilities{gap:5px}.utility{font-size:9px;padding:8px 5px}.controls{display:flex;flex-direction:column;gap:0}.settings-row{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:10px}.set-card{padding:14px 12px}.brand{font-size:21px}select{font-size:12px}}
 .stepper button:disabled{cursor:default;opacity:.3}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+/* Xbox One only (html.console-kit, set by the console kit there): the tray, its results and ROLL fit the console's
+   1152x567 page (1152x648 in fullscreen), the two sets side by side, with TV-size text. */
+html.console-kit .app{padding:10px 0 8px}
+html.console-kit .masthead{padding-bottom:8px}
+html.console-kit .utility{font-size:16px;min-height:44px}
+html.console-kit .title-row{padding:6px 0 10px}
+html.console-kit .eyebrow,html.console-kit .title-detail{display:none}
+html.console-kit h1{font-size:44px}
+html.console-kit .console{grid-template-columns:minmax(0,1fr) 520px;gap:20px}
+html.console-kit .panel-bar{font-size:16px;padding:8px 14px}
+html.console-kit .tray{min-height:0;max-height:none;aspect-ratio:auto;height:calc(100vh - 285px)}
+html.console-kit .view-label{font-size:16px}
+html.console-kit .results{font-size:18px;padding:8px 14px;min-height:0;gap:6px}
+html.console-kit .ready-note,html.console-kit .result-label,html.console-kit .result-note{font-size:16px}
+html.console-kit .controls{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+html.console-kit .set-card{padding:10px 12px 12px;margin:0 0 12px}
+html.console-kit .set-card legend,html.console-kit .set-number,html.console-kit .set-card label,html.console-kit .colour-input span{font-size:16px}
+html.console-kit .set-card label{margin-bottom:4px}
+html.console-kit select{font-size:16px;min-height:42px}
+html.console-kit .settings-row{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+html.console-kit .stepper{width:100%;justify-content:space-between}
+html.console-kit .stepper input{flex:1}
+html.console-kit .stepper input{font-size:18px}
+html.console-kit .amount-hint,html.console-kit .roll-button,html.console-kit .keyboard-hint{grid-column:1/-1}
+html.console-kit .amount-hint{font-size:16px;margin:0 0 10px}
+html.console-kit .roll-button{min-height:60px;padding:12px 20px;font-size:32px}
+html.console-kit .keyboard-hint,html.console-kit kbd,html.console-kit .notice,html.console-kit .footer{font-size:16px}
+html.console-kit .keyboard-hint{margin-top:10px}

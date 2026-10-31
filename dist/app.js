@@ -9,6 +9,8 @@
   let lastFrame = 0, nextIntro = 0, quietTime = 0, resultsShown = false;
   let motionActive = false, musicPlaying = false, motionLast = 0, motionReading = null;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Edge on the Xbox One (the console kit, through console.js; it runs first): its user agent never says Xbox.
+  const onConsole = () => Boolean(window.DigidiceConsole && window.DigidiceConsole.isConsole());
   const assetNames = {
     dice:['d3fe6-img_1554-1.png','c424a-img_1555-1.png','c84d5-img_1556-1.png','8c6ff-img_1557-1.png','c3f09-img_1558-1.png','d2b7f-img_1559-1.png'],
     coin:['4e0d5-img_1604-1.png','3663e-img_1596-1.png','7d532-img_1598-1.png'],
@@ -24,7 +26,7 @@
   function resize() {
     const width=tray.clientWidth, height=tray.clientHeight;
     if (!renderer || !width || !height) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,/Xbox/i.test(navigator.userAgent)?1:2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,onConsole()?1:2));
     renderer.setSize(width,height,false);
     const aspect=width/height, size=12.2;
     camera.left=-size*Math.max(1,aspect); camera.right=-camera.left;
@@ -257,7 +259,7 @@
       if(!core || !window.THREE || !window.CANNON)throw new Error('A local app file is missing. Keep index.html, scripts, assets and vendor folders together.');
       scene=new THREE.Scene();camera=new THREE.OrthographicCamera(-12,12,12,-12,1,1000);
       camera.position.set(0,465,100);camera.lookAt(0,465,0);
-      try{try{renderer=new THREE.WebGLRenderer({canvas,antialias:!/Xbox/i.test(navigator.userAgent),alpha:true});}catch{renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});}renderer.setClearColor(0x000000,0);}catch{let ctx2d=canvas.getContext('2d');if(!ctx2d){const alt=canvas.cloneNode(false);canvas.replaceWith(alt);ctx2d=alt.getContext('2d');}renderer={setClearColor(){},setPixelRatio(){},setSize(w,h){canvas.width=w;canvas.height=h;},render(){if(!ctx2d)return;ctx2d.clearRect(0,0,canvas.width,canvas.height);records.forEach(r=>{const x=(r.body.position.x/24+.5)*canvas.width,y=(r.body.position.z/24+.5)*canvas.height;ctx2d.fillStyle=r.color||'#7de2d1';ctx2d.fillRect(x-16,y-16,32,32);});}};}
+      try{try{renderer=new THREE.WebGLRenderer({canvas,antialias:!onConsole(),alpha:true});}catch{renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});}renderer.setClearColor(0x000000,0);}catch{let ctx2d=canvas.getContext('2d');if(!ctx2d){const alt=canvas.cloneNode(false);canvas.replaceWith(alt);ctx2d=alt.getContext('2d');}renderer={setClearColor(){},setPixelRatio(){},setSize(w,h){canvas.width=w;canvas.height=h;},render(){if(!ctx2d)return;ctx2d.clearRect(0,0,canvas.width,canvas.height);records.forEach(r=>{const x=(r.body.position.x/24+.5)*canvas.width,y=(r.body.position.z/24+.5)*canvas.height;ctx2d.fillStyle=r.color||'#7de2d1';ctx2d.fillRect(x-16,y-16,32,32);});}};}
       world=core.createWorld();textures=await loadTextures();
       $('rollSound').volume=.5;
       Object.keys(core.TYPES).forEach(type=>{geometries[type]=core.geometry(type);if(type!=='coin')edges[type]=new THREE.EdgesGeometry(geometries[type]);});
